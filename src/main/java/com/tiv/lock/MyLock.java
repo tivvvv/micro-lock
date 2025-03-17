@@ -22,6 +22,7 @@ public class MyLock {
     void lock() {
         // 尝试获取锁
         if (flag.compareAndSet(false, true)) {
+            System.out.printf("%s直接抢到锁%n", Thread.currentThread().getName());
             owner = Thread.currentThread();
             return;
         }
@@ -31,6 +32,7 @@ public class MyLock {
         while (true) {
             Node currentTail = tail.get();
             if (tail.compareAndSet(currentTail, currentNode)) {
+                System.out.printf("%s成功加入链表尾%n", Thread.currentThread().getName());
                 currentNode.pre = currentTail;
                 currentTail.next = currentNode;
                 break;
@@ -39,6 +41,7 @@ public class MyLock {
         while (true) {
             // 尝试获取锁
             if (currentNode.pre == head.get() && flag.compareAndSet(false, true)) {
+                System.out.printf("%s被唤醒之后成功抢到锁%n", Thread.currentThread().getName());
                 owner = Thread.currentThread();
                 head.set(currentNode);
                 currentNode.pre.next = null;
@@ -58,6 +61,7 @@ public class MyLock {
         Node nextNode = headNode.next;
         flag.set(false);
         if (nextNode != null) {
+            System.out.printf("%s唤醒了%s%n", Thread.currentThread().getName(), nextNode.thread.getName());
             LockSupport.unpark(nextNode.thread);
         }
     }
