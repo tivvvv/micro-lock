@@ -20,13 +20,7 @@ public class MyLock {
     AtomicReference<Node> tail = new AtomicReference<>(head.get());
 
     void lock() {
-        // 尝试获取锁
-        if (flag.compareAndSet(false, true)) {
-            System.out.printf("%s直接抢到锁%n", Thread.currentThread().getName());
-            owner = Thread.currentThread();
-            return;
-        }
-        // 没有获取到锁,则将当前线程加入队列尾部
+        // 当前线程加入队列尾部
         Node currentNode = new Node();
         currentNode.thread = Thread.currentThread();
         while (true) {

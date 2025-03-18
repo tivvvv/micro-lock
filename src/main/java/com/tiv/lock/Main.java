@@ -13,11 +13,6 @@ public class Main {
             threads.add(new Thread(() -> {
                 lock.lock();
                 for (int j = 0; j < 10; j++) {
-                    try {
-                        Thread.sleep(2);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     count[0]--;
                 }
                 lock.unlock();
